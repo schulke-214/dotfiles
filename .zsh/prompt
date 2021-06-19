@@ -2,7 +2,7 @@ nix-shell-status() {
     nix-shell-active
 
     if [ $? -eq 0 ]; then
-        echo "%{$fg[magenta]%}shell%{$reset_color%} ";
+        echo "%{$fg[yellow]%}shell%{$reset_color%} ";
     fi
 }
 
@@ -11,14 +11,27 @@ formatted-current-branch() {
     local LEN=${#BRANCH}
 
     if [ $LEN -gt 0 ]; then
-        echo " %{$fg[magenta]%}$BRANCH%{$reset_color%} "
+        echo " %{$fg[white]%}$BRANCH%{$reset_color%} "
     else
         echo " "
     fi
 }
 
+formatted-hostname() {
+    echo "%{$fg[magenta]%}$(hostname)%{$reset_color%}"
+}
+
+formatted-pwd() {
+    # echo "%{$fg[yellow]%}$(basename "$PWD")%{$reset_color%}"
+    echo "$(basename "$PWD")"
+}
+
+formatted-separator() {
+    echo "%{$fg[white]%}:%{$reset_color%}"
+}
+
 zsh-prompt() {
-	echo '$(nix-shell-status)$(basename "$PWD")$(formatted-current-branch)λ '
+	echo '$(nix-shell-status)$(formatted-hostname)$(formatted-separator)$(formatted-pwd)$(formatted-current-branch)λ '
 }
 
 setopt PROMPT_SUBST

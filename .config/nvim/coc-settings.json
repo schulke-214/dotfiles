@@ -1,0 +1,10 @@
+{
+	"python.jediEnabled": true,
+	"rust-client.disableRustup": true,
+	"rust.unstable_features": true,
+	"snippets.extends": {
+		"cpp": ["c"],
+		"javascriptreact": ["javascript"],
+		"typescript": ["javascript"]
+	}
+}

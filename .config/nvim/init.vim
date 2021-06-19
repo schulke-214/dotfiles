@@ -28,12 +28,11 @@ Plug 'junegunn/fzf.vim'
 " ux
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'bronson/vim-visual-star-search'
-Plug 'Shougo/echodoc.vim'
+" Plug 'Shougo/echodoc.vim'
 
 " customization
-Plug 'doums/darcula'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'chriskempson/base16-vim'
+Plug 'itchyny/lightline.vim'
 
 " LaTeX
 Plug 'lervag/vimtex'
@@ -50,37 +49,60 @@ set mouse=a
 set nowrap
 set backspace=indent,eol,start
 set clipboard+=unnamedplus
+set relativenumber
 set number
 set laststatus=2
 set encoding=utf-8
 set list
-set listchars=tab:➞\ ,extends:›,precedes:‹,nbsp:·,trail:·,space:·
+set listchars=tab:➞\ ,extends:›,precedes:‹,nbsp:¬,trail:·,space:·
 set wildignore+=*.pyc,*.o,*.obj,*.svn,*.swp,*.class,*.hg,*.DS_Store,*.min.*
-
-autocmd ColorScheme * highlight SpecialKey ctermfg=darkgray
-autocmd ColorScheme * highlight NonText ctermfg=darkgray
 
 " tabs
 set tabstop=4
 set shiftwidth=4
 set smarttab
 set noexpandtab
+set splitright
+set splitbelow
+
+" undo
+set undodir=/tmp/vimdid
+set undofile
+
+" search
+set incsearch
+set ignorecase
+set smartcase
+set gdefault
 
 " theme
 syntax on
 set t_Co=256
-colorscheme darcula
+colorscheme base16-gruvbox-dark-hard
+
+" autocmd ColorScheme * highlight SpecialKey ctermfg=lightgray
+" autocmd ColorScheme * highlight NonText ctermfg=lightgray
 
 """""""""""""""""""""""""""""""""""""""""""
 " General :: Plugin Configuration
 """""""""""""""""""""""""""""""""""""""""""
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_powerline_fonts = 1
-let g:airline_theme='minimalist'
-let g:airline_statusline_ontop=1
+let g:lightline = {
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'filename': 'LightlineFilename',
+  \   'cocstatus': 'coc#status'
+  \ },
+  \ }
+
+function! LightlineFilename()
+  return expand('%:t') !=# '' ? @% : '[No Name]'
+endfunction
+
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 " coc
 let g:coc_global_extensions = [
@@ -150,6 +172,11 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_quiet_messages = { '!level': 'errors', 'type': 'style' }
 
+" rust
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
+
 " EchoDoc
 let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'floating'
@@ -185,6 +212,8 @@ nmap <leader>f  <Plug>(coc-format-selected)
 " searching / replacing
 " <C-Q> = vb
 " map <Leader><Leader>
+vnoremap <leader>h :nohlsearch<cr>
+nnoremap <leader>h :nohlsearch<cr>
 
 nnoremap <leader>r :s///g<Left><Left>
 nnoremap <leader>rc :s///gc<Left><Left><Left>
@@ -209,6 +238,9 @@ map <C-s> :w<CR>
 
 " editing
 noremap Q gqq
+
+nnoremap j gj
+nnoremap k gk
 
 nnoremap <A-j> :m +1<CR>
 vnoremap <A-j> :m '>+1<CR>gv=gv
